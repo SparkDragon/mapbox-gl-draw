@@ -78,9 +78,6 @@ export default function(ctx) {
   };
 
   events.touchstart = function(event) {
-    // Prevent emulated mouse events because we will fully handle the touch here.
-    // This does not stop the touch events from propogating to mapbox though.
-    event.originalEvent.preventDefault();
     if (!ctx.options.touchEnabled) {
       return;
     }
@@ -95,7 +92,6 @@ export default function(ctx) {
   };
 
   events.touchmove = function(event) {
-    event.originalEvent.preventDefault();
     if (!ctx.options.touchEnabled) {
       return;
     }
@@ -105,7 +101,6 @@ export default function(ctx) {
   };
 
   events.touchend = function(event) {
-    event.originalEvent.preventDefault();
     if (!ctx.options.touchEnabled) {
       return;
     }
@@ -241,9 +236,9 @@ export default function(ctx) {
       ctx.map.off('mouseup', events.mouseup);
       ctx.map.off('data', events.data);
 
-      ctx.map.off('touchmove', events.touchmove);
-      ctx.map.off('touchstart', events.touchstart);
-      ctx.map.off('touchend', events.touchend);
+      ctx.map.off('touchmove', events.touchmove, {passive:true});
+      ctx.map.off('touchstart', events.touchstart, {passive:true});
+      ctx.map.off('touchend', events.touchend, {passive:true});
 
       ctx.container.removeEventListener('mouseout', events.mouseout);
 
